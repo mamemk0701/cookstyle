@@ -1,0 +1,16 @@
+inherit_mode:
+  merge:
+    - exclude
+    - include
+
+require:
+  - ./outdated_software_test.rb
+
+Custom/OutdatedPackageCheck:
+  Enabled: true
+
+Style/RedundantSelfAssignmentBranch:
+  Enabled: true
+
+AllCops:
+  NewCops: enable
