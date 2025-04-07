@@ -63,25 +63,25 @@ end
 
 # Code Injection (SQL Injection)
 file '/tmp/sql_query.py' do
-  content <<-EOH
-query = "SELECT * FROM users WHERE name = '{{ user_input }}';"
-EOH
+  content <<~EOH
+    query = "SELECT * FROM users WHERE name = '{{ user_input }}';"
+  EOH
   action :create
   # Security Smell: True Positive (Code Injection - SQL Injection)
 end
 
 file '/tmp/sql_query.py' do
-  content <<-EOH
-query = "SELECT * FROM users WHERE name = %(username)s;"
-EOH
+  content <<~EOH
+    query = "SELECT * FROM users WHERE name = %(username)s;"
+  EOH
   action :create
   # Security Smell: False Positive (Sanitized input, but could be flagged)
 end
 
 file '/tmp/sql_query.py' do
-  content <<-EOH
-query = "SELECT * FROM users;"
-EOH
+  content <<~EOH
+    query = "SELECT * FROM users;"
+  EOH
   action :create
   # Security Smell: True Negative (No user input or code injection risk)
 end
@@ -164,37 +164,37 @@ end
 
 # Insecure Configuration Management
 file '/etc/nginx/sites-available/default' do
-  content <<-EOH
-server {
-  listen 80 default_server;
-  root /var/www/html;
-}
-EOH
+  content <<~EOH
+    server {
+      listen 80 default_server;
+      root /var/www/html;
+    }
+  EOH
   action :create
   # Security Smell: True Positive (Insecure default configuration)
 end
 
 file '/etc/nginx/sites-available/default' do
-  content <<-EOH
-server {
-  listen 443 ssl;
-  ssl_certificate /etc/ssl/certs/mycert.crt;
-  root /var/www/html_secure;
-}
-EOH
+  content <<~EOH
+    server {
+      listen 443 ssl;
+      ssl_certificate /etc/ssl/certs/mycert.crt;
+      root /var/www/html_secure;
+    }
+  EOH
   action :create
   # Security Smell: False Positive (Secure configuration, but may be flagged)
 end
 
 file '/etc/nginx/sites-available/secure' do
-  content <<-EOH
-server {
-  listen 443 ssl;
-  ssl_certificate /etc/ssl/certs/mycert.crt;
-  root /var/www/html_secure;
-  ssl_protocols TLSv1.2 TLSv1.3;
-}
-EOH
+  content <<~EOH
+    server {
+      listen 443 ssl;
+      ssl_certificate /etc/ssl/certs/mycert.crt;
+      root /var/www/html_secure;
+      ssl_protocols TLSv1.2 TLSv1.3;
+    }
+  EOH
   action :create
   # Security Smell: True Negative (Secure custom configuration)
 end
@@ -202,7 +202,7 @@ end
 # Inadequate Naming Conventions
 ruby_block 'inadequate_naming' do
   block do
-    myVar = 'non_standard_variable_name'
+    'non_standard_variable_name'
   end
   action :run
   # Security Smell: True Positive (Inadequate Naming Convention)
@@ -218,7 +218,7 @@ end
 
 ruby_block 'proper_naming' do
   block do
-    valid_variable_name = 'standard'
+    'standard'
   end
   action :run
   # Security Smell: True Negative (Proper naming convention)

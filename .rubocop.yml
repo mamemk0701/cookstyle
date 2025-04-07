@@ -5,12 +5,20 @@ inherit_mode:
 
 require:
   - ./outdated_software_test.rb
+  - ./sensitive_info_check.rb
 
 Custom/OutdatedPackageCheck:
   Enabled: true
 
+Custom/SensitiveInfoExposure:
+  Enabled: true
+  SecurePatterns: ['vault\\(', 'data_bag\\(', 'secret\\(']
+
 Style/RedundantSelfAssignmentBranch:
   Enabled: true
+
+Layout/EndOfLine:
+  Enabled: false
 
 AllCops:
   NewCops: enable
