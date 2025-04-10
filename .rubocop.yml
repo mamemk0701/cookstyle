@@ -12,7 +12,16 @@ Custom/OutdatedPackageCheck:
 
 Custom/SensitiveInfoExposure:
   Enabled: true
-  SecurePatterns: ['vault\\(', 'data_bag\\(', 'secret\\(']
+  MaxPermissions: 0600  # Permissions maximales autorisées (en octal)
+  SensitiveFilenamePatterns:
+    - 'secret*'
+    - 'password*'
+    - 'credential*'
+    - '*.key'
+    - '*.pem'
+    - '*.crt'
+    - '*.env*'
+    - '*config*'
 
 Style/RedundantSelfAssignmentBranch:
   Enabled: true

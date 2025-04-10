@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 file '/tmp/secrets.txt' do
   content 'password=mysecretpassword'
   mode '0644'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Outdated Software Version
 package 'nginx' do
   version '1.14.0'

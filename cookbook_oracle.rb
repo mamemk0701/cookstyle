@@ -1,4 +1,6 @@
-# Cookbook Name:: security_smells
+# frozen_string_literal: true
+
+# Cookbook:: security_smells
 # Recipe:: default
 
 # Outdated Software Version

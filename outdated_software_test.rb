@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RuboCop
   module Cop
     module Custom
@@ -15,7 +17,7 @@ module RuboCop
         LATEST_VERSIONS = {
           'nginx' => '1.26.3',
           'apache' => '2.4.57',
-          'mysql' => '8.0.4'
+          'mysql' => '8.0.4',
         }.freeze
 
         def on_block(node)
