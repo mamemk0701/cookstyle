@@ -4,7 +4,7 @@ module RuboCop
       class SensitiveInfoExposure < Base
         MSG_SENSITIVE = "Sensitive information exposure in %s (content: %s). Security Smell: True Positive"
         MSG_INSECURE_PERMS = "Sensitive information exposure in %s (content: %s). Permissions %s are too permissive (max allowed: %s). Security Smell: True Positive"
-        `MSG_INSECURE_FILENAME` = "Potentially sensitive filename %s with permissions %s (max allowed: %s). Security Smell: True Positive"
+        MSG_INSECURE_FILENAME = "Potentially sensitive filename %s with permissions %s (max allowed: %s). Security Smell: True Positive"
         MSG_SECURE_HANDLING = "Secure handling of sensitive information detected in %s. Security Smell: True Negative"
         MSG_FALSE_POSITIVE = "Non-sensitive content in %s. Security Smell: False Positive"
 
