@@ -2,18 +2,18 @@ module RuboCop
   module Cop
     module Custom
       class SensitiveInfoExposure < Base
-        MSG_SENSITIVE = "Sensitive information exposure in %s (content: %s). Security Smell: True Positive"
-        MSG_INSECURE_PERMS = "Sensitive information exposure in %s (content: %s). Permissions %s are too permissive (max allowed: %s). Security Smell: True Positive"
-        MSG_INSECURE_FILENAME = "Potentially sensitive filename %s with permissions %s (max allowed: %s). Security Smell: True Positive"
-        MSG_SECURE_HANDLING = "Secure handling of sensitive information detected in %s. Security Smell: True Negative"
-        MSG_FALSE_POSITIVE = "Non-sensitive content in %s. Security Smell: False Positive"
+        MSG_SENSITIVE = 'Sensitive information exposure in %s (content: %s). Security Smell: True Positive'
+        MSG_INSECURE_PERMS = 'Sensitive information exposure in %s (content: %s). Permissions %s are too permissive (max allowed: %s). Security Smell: True Positive'
+        MSG_INSECURE_FILENAME = 'Potentially sensitive filename %s with permissions %s (max allowed: %s). Security Smell: True Positive'
+        MSG_SECURE_HANDLING = 'Secure handling of sensitive information detected in %s. Security Smell: True Negative'
+        MSG_FALSE_POSITIVE = 'Non-sensitive content in %s. Security Smell: False Positive'
 
         DEFAULT_MAX_PERMISSIONS = 0o600
-        SENSITIVE_FILENAME_PATTERNS = %w[
-          secret* password* credential* key* token* 
+        SENSITIVE_FILENAME_PATTERNS = %w(
+          secret* password* credential* key* token*
           *.pem *.key *.crt *.cert *.pub *.priv
           *config* *conf* *.env* *password*
-        ].freeze
+        ).freeze
 
         def_node_matcher :file_block?, <<~PATTERN
           (block
@@ -44,8 +44,8 @@ module RuboCop
             add_offense(node, message: format(MSG_SECURE_HANDLING, file_path))
           elsif sensitive_content?(content) || sensitive_filename?(file_path)
             check_sensitive_exposure(node, file_path, content, permissions)
-          else
-            add_offense(node, message: format(MSG_FALSE_POSITIVE, file_path)) if false_positive?(content)
+          elsif false_positive?(content)
+            add_offense(node, message: format(MSG_FALSE_POSITIVE, file_path))
           end
         end
 
@@ -69,9 +69,9 @@ module RuboCop
         private
 
         def secure_handling?(node)
-          node.source.include?('vault(') || 
-          node.source.include?('data_bag(') ||
-          node.source.include?('secret(')
+          node.source.include?('vault(') ||
+            node.source.include?('data_bag(') ||
+            node.source.include?('secret(')
         end
 
         def sensitive_content?(content)
@@ -111,27 +111,29 @@ module RuboCop
           puts "DEBUG: Starting find_permissions for node: #{node.type}"
           node.each_child_node do |child|
             puts "DEBUG: Checking child: #{child.type} | #{child.source}"
-            
-            if child.send_type?
-              puts "DEBUG: Found send: method_name=#{child.method_name}"
-              
-              if child.method_name == :mode
-                puts "DEBUG: Found mode assignment"
-                arg = child.first_argument
-                puts "DEBUG: Argument type: #{arg.type} | value: #{arg.value rescue 'N/A'} | source: #{arg.source}"
-                
-                if arg.str_type?
-                  puts "DEBUG: Found string permissions: #{arg.value}"
-                  return arg.value
-                else
-                  puts "DEBUG: Found non-string permissions: #{arg.source}"
-                  return arg.source
-                end
-              end
+
+            next unless child.send_type?
+            puts "DEBUG: Found send: method_name=#{child.method_name}"
+
+            next unless child.method_name == :mode
+            puts 'DEBUG: Found mode assignment'
+            arg = child.first_argument
+            puts "DEBUG: Argument type: #{arg.type} | value: #{begin
+                                                                   arg.value
+                                                               rescue
+                                                                 'N/A'
+                                                                 end} | source: #{arg.source}"
+
+            if arg.str_type?
+              puts "DEBUG: Found string permissions: #{arg.value}"
+              return arg.value
+            else
+              puts "DEBUG: Found non-string permissions: #{arg.source}"
+              return arg.source
             end
           end
-          
-          puts "DEBUG: Failed to find permissions in:"
+
+          puts 'DEBUG: Failed to find permissions in:'
           puts node.source
           nil
         end

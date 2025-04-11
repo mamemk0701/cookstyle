@@ -6,6 +6,7 @@ inherit_mode:
 require:
   - ./outdated_software_test.rb
   - ./sensitive_info_check.rb
+  - ./sql_injection_check.rb
 
 Custom/OutdatedPackageCheck:
   Enabled: true
@@ -22,6 +23,14 @@ Custom/SensitiveInfoExposure:
     - '*.crt'
     - '*.env*'
     - '*config*'
+
+Custom/CodeInjectionRisk:
+  Enabled: true
+  Include:
+    - '**/*.rb'
+    - '**/*.py'
+    - '**/*.sql'
+    - '**/*.sh'
 
 Style/RedundantSelfAssignmentBranch:
   Enabled: true
